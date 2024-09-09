@@ -17,6 +17,8 @@ public class CocktailGuessGame {
     public void startGame() {
         //Game initialization
         Scanner scanner = new Scanner(System.in);
+        GameStatus gameStatus = new GameStatus();
+
         System.out.println("Welcome to 'Guess this cocktail'!");
         System.out.println("""
         We will provide you with a description and number of letters in the name
@@ -39,27 +41,39 @@ public class CocktailGuessGame {
                 System.out.println("For testing purpose: " + randomCocktail.getName());
                 System.out.println("The cocktail has " + randomCocktail.getName().length() + " letters. What is the cocktail name?");
 
-                while (true) {
+                while (gameStatus.getRemainingTries() > 0) {
                     String guess = scanner.nextLine();
                     if (guess.equalsIgnoreCase("exit game")) {
                         keepPlaying = false;
                         break;
                     } else if (guess.equalsIgnoreCase(randomCocktail.getName())) {
                         System.out.println("You are correct. Good job!");
-                        System.out.println("Let's keep going!");
+                        System.out.println("You earned " + gameStatus.getRemainingTries() + " points");
+                        gameStatus.addPoints(gameStatus.getRemainingTries());
+                        gameStatus.resetTries();
+                        System.out.println("Let's keep going!\n");
                         break;
                     } else {
-                        System.out.println("Alas, you did not get it this time. Try again, or type 'exit game' to quit the game.");
+                        gameStatus.decreaseTries();
+                        if (gameStatus.isGameOver()) {
+                            System.out.println("You've used up all your tries.");
+                            keepPlaying = false;
+                            break;
+                        } else {
+                            System.out.println("Alas, you did not get it this time. Tries remaining: " + gameStatus.getRemainingTries() + ". Try again, or type 'exit game' to quit the game.");
+                        }
                     }
                 }
             }
 
             if (!keepPlaying) {
+                System.out.println("Game over! Your total score is: " + gameStatus.getScore());
                 break;
             }
         }
 
         System.out.println("Thanks for playing! See you around, " + name + ".");
+        scanner.close();
     }
 
     public Cocktail fetchRandomCocktail() {
