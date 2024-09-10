@@ -7,7 +7,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Scanner;
 
-
 @Component
 public class CocktailGuessGame {
 
@@ -38,6 +37,7 @@ public class CocktailGuessGame {
 
             if (randomCocktail != null) {
                 System.out.println("These are the instructions for the cocktail: " + randomCocktail.getInstructions());
+                //For testing display the cocktail name
                 System.out.println("For testing purpose: " + randomCocktail.getName());
                 System.out.println("The cocktail has " + randomCocktail.getName().length() + " letters. What is the cocktail name?");
 
@@ -47,9 +47,15 @@ public class CocktailGuessGame {
                         keepPlaying = false;
                         break;
                     } else if (guess.equalsIgnoreCase(randomCocktail.getName())) {
+                        int pointsEarned = gameStatus.getRemainingTries();
+                        gameStatus.addPoints(pointsEarned);
+
+                        //Debugging
+                        //System.out.println("---DEBUG--- Points earned: " + pointsEarned);
+                        //System.out.println("---DEBUG--- Score after adding points: " + gameStatus.getScore());
+
                         System.out.println("You are correct. Good job!");
-                        System.out.println("You earned " + gameStatus.getRemainingTries() + " points");
-                        gameStatus.addPoints(gameStatus.getRemainingTries());
+                        System.out.println("You earned " + pointsEarned + " points, for a total of: " + gameStatus.getScore());
                         gameStatus.resetTries();
                         System.out.println("Let's keep going!\n");
                         break;
