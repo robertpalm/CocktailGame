@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Scanner;
+import java.util.*;
 
 @Component
 public class CocktailGuessGame {
@@ -36,12 +36,17 @@ public class CocktailGuessGame {
             Cocktail randomCocktail = fetchRandomCocktail();
 
             if (randomCocktail != null) {
+                String hiddenName = randomCocktail.generateHiddenName();
+
                 System.out.println("These are the instructions for the cocktail: " + randomCocktail.getInstructions());
                 //For testing display the cocktail name
                 System.out.println("For testing purpose: " + randomCocktail.getName());
-                System.out.println("The cocktail has " + randomCocktail.getName().length() + " letters. What is the cocktail name?");
+                System.out.println("The cocktail has " + randomCocktail.getName().replace(" ", "").length() + " letters and " +
+                        "consists of " +randomCocktail.getName().split(" ").length + " words." +
+                        "What is the cocktail name?");
 
                 while (gameStatus.getRemainingTries() > 0) {
+                    System.out.println("Current guess: " + hiddenName);
                     String guess = scanner.nextLine();
                     if (guess.equalsIgnoreCase("exit game")) {
                         keepPlaying = false;
@@ -57,10 +62,13 @@ public class CocktailGuessGame {
                         System.out.println("You are correct. Good job!");
                         System.out.println("You earned " + pointsEarned + " points, for a total of: " + gameStatus.getScore());
                         gameStatus.resetTries();
+                        randomCocktail.setFirstMistake(true); //reset for next cocktail.
                         System.out.println("Let's keep going!\n");
                         break;
                     } else {
                         gameStatus.decreaseTries();
+                        hiddenName = randomCocktail.revealLetters(hiddenName);
+
                         if (gameStatus.isGameOver()) {
                             System.out.println("You've used up all your tries.");
                             keepPlaying = false;
