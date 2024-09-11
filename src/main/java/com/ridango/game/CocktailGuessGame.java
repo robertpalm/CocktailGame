@@ -39,7 +39,13 @@ public class CocktailGuessGame {
                 randomCocktail.addIngredients();
                 String hiddenName = randomCocktail.generateHiddenName();
 
-                System.out.println("These are the instructions for the cocktail: " + randomCocktail.getInstructions());
+                String instructions = randomCocktail.getInstructions();
+                if (instructions == null || instructions.trim().isEmpty()) {
+                    System.out.println("It seems there are no special instructions for this cocktail...");
+                } else {
+                    System.out.println("These are the instructions for the cocktail: " + instructions);
+                }
+
                 //For testing display the cocktail name
                 System.out.println("For testing purpose: " + randomCocktail.getName());
                 System.out.println("The cocktail has " + randomCocktail.getName().replace(" ", "").length() + " letters and " +
