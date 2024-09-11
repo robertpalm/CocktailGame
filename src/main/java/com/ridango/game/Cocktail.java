@@ -15,7 +15,18 @@ public class Cocktail {
    @JsonProperty("strInstructions")
     private String instructions;
 
+   @JsonProperty("strIngredient1")
+   private String strIngredient1;
+
    private boolean firstMistake = true;
+   private List<String> ingredients = new ArrayList<>();
+
+   //Add ingredients from API response
+    public void addIngredients() {
+        if (strIngredient1 != null && !strIngredient1.trim().isEmpty()) {
+            ingredients.add(strIngredient1);
+        }
+    }
 
    //Generate the hidden name
     public String generateHiddenName() {

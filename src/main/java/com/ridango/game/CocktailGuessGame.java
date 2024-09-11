@@ -36,6 +36,7 @@ public class CocktailGuessGame {
             Cocktail randomCocktail = fetchRandomCocktail();
 
             if (randomCocktail != null) {
+                randomCocktail.addIngredients();
                 String hiddenName = randomCocktail.generateHiddenName();
 
                 System.out.println("These are the instructions for the cocktail: " + randomCocktail.getInstructions());
@@ -44,6 +45,8 @@ public class CocktailGuessGame {
                 System.out.println("The cocktail has " + randomCocktail.getName().replace(" ", "").length() + " letters and " +
                         "consists of " +randomCocktail.getName().split(" ").length + " words." +
                         "What is the cocktail name?");
+
+                boolean hintGiven = false;
 
                 while (gameStatus.getRemainingTries() > 0) {
                     System.out.println("Current guess: " + hiddenName);
@@ -62,27 +65,41 @@ public class CocktailGuessGame {
                         System.out.println("You are correct. Good job!");
                         System.out.println("You earned " + pointsEarned + " points, for a total of: " + gameStatus.getScore());
                         gameStatus.resetTries();
-                        randomCocktail.setFirstMistake(true); //reset for next cocktail.
+                        randomCocktail.setFirstMistake(false); //reset for next cocktail.
                         System.out.println("Let's keep going!\n");
                         break;
                     } else {
                         gameStatus.decreaseTries();
+                        System.out.println("Alas, you did not get it this time. Tries remaining: " +
+                                gameStatus.getRemainingTries() + ". Try again, or type 'exit game' to quit the game.");
+
+                        if (!hintGiven) {
+                            System.out.println("Here's a hint for you: First letter is '" +
+                                    randomCocktail.getName().charAt(0) +
+                                    "' and the cocktail's ingredient is: " +
+                                    (randomCocktail.getIngredients().isEmpty() ? "None" : randomCocktail.getIngredients().get(0)));
+                            hintGiven = true;
+                        }
+
+                        // Update and display the hidden name with one more revealed letter
                         hiddenName = randomCocktail.revealLetters(hiddenName);
 
                         if (gameStatus.isGameOver()) {
                             System.out.println("You've used up all your tries.");
                             keepPlaying = false;
                             break;
-                        } else {
-                            System.out.println("Alas, you did not get it this time. Tries remaining: " + gameStatus.getRemainingTries() + ". Try again, or type 'exit game' to quit the game.");
                         }
                     }
                 }
+            } else {
+                System.out.println("Failed to fetch a cocktail. Exiting game.");
+                keepPlaying = false;
             }
 
-            if (!keepPlaying) {
+            if (keepPlaying && gameStatus.getRemainingTries() <= 0) {
+                System.out.println("You've used up all your tries.");
                 System.out.println("Game over! Your total score is: " + gameStatus.getScore());
-                break;
+                keepPlaying = false;
             }
         }
 
