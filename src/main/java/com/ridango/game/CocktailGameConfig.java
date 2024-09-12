@@ -7,10 +7,10 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class CocktailGameConfig {
 
-    @Bean
-    public CocktailGuessGame guessGame() {
-        return new CocktailGuessGame();
-    }
+//    @Bean
+//    public CocktailGuessGame guessGame() {
+//        return new CocktailGuessGame();
+//    }
 
     @Bean
     public RestTemplate restTemplate() {

@@ -17,6 +17,6 @@ public class CocktailGameApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		cocktailGuessGame.startGame();
+		cocktailGuessGame.displayMainMenu();
 	}
 }
