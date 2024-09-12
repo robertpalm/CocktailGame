@@ -18,13 +18,63 @@ public class Cocktail {
    @JsonProperty("strIngredient1")
    private String strIngredient1;
 
+   @JsonProperty("strIngredient2")
+   private String strIngredient2;
+
+   @JsonProperty("strIngredient3")
+   private String strIngredient3;
+
+   @JsonProperty("strIngredient4")
+   private String strIngredient4;
+
+   @JsonProperty("strIngredient5")
+   private String strIngredient5;
+
+   @JsonProperty("strIngredient6")
+   private String strIngredient6;
+
+   @JsonProperty("strIngredient7")
+   private String strIngredient7;
+
+   @JsonProperty("strIngredient8")
+   private String strIngredient8;
+
+   @JsonProperty("strIngredient9")
+   private String strIngredient9;
+
+   @JsonProperty("strIngredient10")
+   private String strIngredient10;
+
+   @JsonProperty("strIngredient11")
+   private String strIngredient11;
+
+   @JsonProperty("strIngredient12")
+   private String strIngredient12;
+
+   @JsonProperty("strIngredient13")
+   private String strIngredient13;
+
+   @JsonProperty("strIngredient14")
+   private String strIngredient14;
+
+   @JsonProperty("strIngredient15")
+   private String strIngredient15;
+
    private boolean firstMistake = true;
    private List<String> ingredients = new ArrayList<>();
 
    //Add ingredients from API response
     public void addIngredients() {
-        if (strIngredient1 != null && !strIngredient1.trim().isEmpty()) {
-            ingredients.add(strIngredient1);
+        List<String> ingredientFields = Arrays.asList(
+                strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5,
+                strIngredient6, strIngredient7, strIngredient8, strIngredient9, strIngredient10,
+                strIngredient11, strIngredient12, strIngredient13, strIngredient14, strIngredient15
+        );
+
+        for (String ingredient : ingredientFields) {
+            if (ingredient != null && !ingredient.trim().isEmpty()) {
+                ingredients.add(ingredient);
+            }
         }
     }
 

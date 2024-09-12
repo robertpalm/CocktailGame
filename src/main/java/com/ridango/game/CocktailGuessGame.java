@@ -64,34 +64,34 @@ public class CocktailGuessGame {
                         int pointsEarned = gameStatus.getRemainingTries();
                         gameStatus.addPoints(pointsEarned);
 
-                        //Debugging
-                        //System.out.println("---DEBUG--- Points earned: " + pointsEarned);
-                        //System.out.println("---DEBUG--- Score after adding points: " + gameStatus.getScore());
-
                         System.out.println("You are correct. Good job!");
                         System.out.println("You earned " + pointsEarned + " points, for a total of: " + gameStatus.getScore());
                         gameStatus.resetTries();
-                        randomCocktail.setFirstMistake(false); //reset for next cocktail.
+                        randomCocktail.setFirstMistake(false); // reset for next cocktail.
                         System.out.println("Let's keep going!\n");
                         break;
                     } else {
                         gameStatus.decreaseTries();
-                        System.out.println("Alas, you did not get it this time. Tries remaining: " +
-                                gameStatus.getRemainingTries() + ". Try again, or type 'exit game' to quit the game.");
 
-                        if (!hintGiven) {
-                            System.out.println("Here's a hint for you: First letter is '" +
-                                    randomCocktail.getName().charAt(0) +
-                                    "' and the cocktail's ingredient is: " +
-                                    (randomCocktail.getIngredients().isEmpty() ? "None" : randomCocktail.getIngredients().get(0)));
-                            hintGiven = true;
+                        // Handle hint and letter reveal in a more controlled manner
+                        if (gameStatus.getRemainingTries() > 0) {
+                            System.out.println("Alas, you did not get it this time. Tries remaining: " +
+                                    gameStatus.getRemainingTries() + ". Try again, or type 'exit game' to quit the game.");
+
+                            if (!hintGiven) {
+                                String ingredientsHint = String.join(", ", randomCocktail.getIngredients());
+                                System.out.println("Here's a hint for you: First letter is '" + randomCocktail.getName().charAt(0) +
+                                        "' and the cocktail's ingredients are: " + ingredientsHint);
+                                hintGiven = true;
+                            }
+
+                            // Update and display the hidden name with one more revealed letter
+                            hiddenName = randomCocktail.revealLetters(hiddenName);
                         }
 
-                        // Update and display the hidden name with one more revealed letter
-                        hiddenName = randomCocktail.revealLetters(hiddenName);
-
-                        if (gameStatus.isGameOver()) {
+                        if (gameStatus.getRemainingTries() == 0) {
                             System.out.println("You've used up all your tries.");
+                            System.out.println("Game over! Your total score is: " + gameStatus.getScore());
                             keepPlaying = false;
                             break;
                         }
