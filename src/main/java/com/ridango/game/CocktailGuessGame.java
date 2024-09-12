@@ -36,6 +36,7 @@ public class CocktailGuessGame {
             Cocktail randomCocktail = fetchRandomCocktail();
 
             if (randomCocktail != null) {
+                gameStatus.markDrinkAsSeen(randomCocktail.getId());
                 randomCocktail.addIngredients();
                 String hiddenName = randomCocktail.generateHiddenName();
 
@@ -48,6 +49,7 @@ public class CocktailGuessGame {
 
                 //For testing display the cocktail name
                 System.out.println("For testing purpose: " + randomCocktail.getName());
+
                 System.out.println("The cocktail has " + randomCocktail.getName().replace(" ", "").length() + " letters and " +
                         "consists of " +randomCocktail.getName().split(" ").length + " words." +
                         "What is the cocktail name?");
@@ -126,5 +128,20 @@ public class CocktailGuessGame {
         }
 
         return null;
+    }
+
+    private Cocktail fetchUniqueCocktail(GameStatus gameStatus) {
+        Cocktail cocktail;
+        int attempt = 0;
+        do {
+            cocktail = fetchRandomCocktail();
+            attempt++;
+        } while (cocktail != null && gameStatus.isDrinksSeen(cocktail.getId()) && attempt < 20);
+
+        if (attempt >= 10) {
+            return null;
+        }
+
+        return cocktail;
     }
 }
