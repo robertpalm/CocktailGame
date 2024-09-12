@@ -13,6 +13,36 @@ public class CocktailGuessGame {
     @Autowired
     private RestTemplate restTemplate;
 
+    private int highScore = 0;
+
+    public void displayMainMenu() {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\nMain Menu");
+            System.out.println("a) New Game");
+            System.out.println("b) View High Score");
+            System.out.println("c) Exit");
+            System.out.println("Choose an option (a/b/c) : ");
+            String choice = scanner.nextLine();
+
+            switch (choice.toLowerCase()) {
+                case "a":
+                    startGame();
+                    break;
+                case "b":
+                    viewHighScore();
+                    break;
+                case "c":
+                    System.out.println("Exiting the game. Goodbye!");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid option. Please choose a, b, or c.");
+            }
+        }
+    }
+
     public void startGame() {
         //Game initialization
         Scanner scanner = new Scanner(System.in);
@@ -33,7 +63,7 @@ public class CocktailGuessGame {
         boolean keepPlaying = true;
 
         while (keepPlaying) {
-            Cocktail randomCocktail = fetchRandomCocktail();
+            Cocktail randomCocktail = fetchUniqueCocktail(gameStatus);
 
             if (randomCocktail != null) {
                 gameStatus.markDrinkAsSeen(randomCocktail.getId());
@@ -75,7 +105,6 @@ public class CocktailGuessGame {
                     } else {
                         gameStatus.decreaseTries();
 
-                        // Handle hint and letter reveal in a more controlled manner
                         if (gameStatus.getRemainingTries() > 0) {
                             System.out.println("Alas, you did not get it this time. Tries remaining: " +
                                     gameStatus.getRemainingTries() + ". Try again, or type 'exit game' to quit the game.");
@@ -87,13 +116,16 @@ public class CocktailGuessGame {
                                 hintGiven = true;
                             }
 
-                            // Update and display the hidden name with one more revealed letter
                             hiddenName = randomCocktail.revealLetters(hiddenName);
                         }
 
                         if (gameStatus.getRemainingTries() == 0) {
                             System.out.println("You've used up all your tries.");
                             System.out.println("Game over! Your total score is: " + gameStatus.getScore());
+                            if (gameStatus.getScore() > highScore) {
+                                highScore = gameStatus.getScore();
+                                System.out.println("Congratulations! You beat the high score! New high score: " + highScore);
+                            }
                             keepPlaying = false;
                             break;
                         }
@@ -107,12 +139,19 @@ public class CocktailGuessGame {
             if (keepPlaying && gameStatus.getRemainingTries() <= 0) {
                 System.out.println("You've used up all your tries.");
                 System.out.println("Game over! Your total score is: " + gameStatus.getScore());
+                if (gameStatus.getScore() > highScore) {
+                    highScore = gameStatus.getScore();
+                    System.out.println("Congratulations! You beat the high score! New high score: " + highScore);
+                }
                 keepPlaying = false;
             }
         }
 
         System.out.println("Thanks for playing! See you around, " + name + ".");
-        scanner.close();
+    }
+
+    private void viewHighScore() {
+        System.out.println("The current high score is: " + highScore);
     }
 
     public Cocktail fetchRandomCocktail() {
@@ -138,7 +177,7 @@ public class CocktailGuessGame {
             attempt++;
         } while (cocktail != null && gameStatus.isDrinksSeen(cocktail.getId()) && attempt < 20);
 
-        if (attempt >= 10) {
+        if (attempt >= 20) {
             return null;
         }
 
