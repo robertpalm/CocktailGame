@@ -9,6 +9,9 @@ import java.util.*;
 @Getter
 @Setter
 public class Cocktail {
+    @JsonProperty("idDrink")
+    private String id;
+
    @JsonProperty("strDrink")
     private String name;
 

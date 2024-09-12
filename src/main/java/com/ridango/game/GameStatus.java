@@ -1,12 +1,17 @@
 package com.ridango.game;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class GameStatus {
     private int score;
     private int remainingTries;
+    private Set<String> seenCocktailIds;
 
     public GameStatus() {
         this.score = 0;
         this.remainingTries = 5;
+        this.seenCocktailIds = new HashSet<>();
     }
 
     public int getScore() {
@@ -33,5 +38,13 @@ public class GameStatus {
 
     public boolean isGameOver() {
         return remainingTries == 0;
+    }
+
+    public boolean isDrinksSeen(String id) {
+        return seenCocktailIds.contains(id);
+    }
+
+    public void markDrinkAsSeen(String id) {
+        seenCocktailIds.add(id);
     }
 }
